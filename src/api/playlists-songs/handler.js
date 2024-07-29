@@ -6,7 +6,7 @@ class PlaylistsSongsHandler {
   }
 
   async postPlaylistsSongHandler(request, h) {
-    this._validator.validatePlaylistsSongPayload(request.payload);
+    this._validator.validatePostPlaylistsSongsPayload(request.payload);
     const { playlistId } = request.params;
     const { songId } = request.payload;
 
@@ -14,16 +14,14 @@ class PlaylistsSongsHandler {
       playlistId,
       request.auth.credentials.id
     );
-    const playlistsongId = await this._playlistsSongsService.addSongToPlaylist(
-      playlistId,
-      songId
-    );
+    const playlistsSongsId =
+      await this._playlistsSongsService.addSongToPlaylist(playlistId, songId);
 
     const response = h.response({
       status: 'success',
       message: 'Lagu berhasil ditambahkan ke playlist',
       data: {
-        playlistsongId,
+        playlistsSongsId,
       },
     });
     response.code(201);

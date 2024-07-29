@@ -1,11 +1,11 @@
-const { pool } = require('./pool');
+const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class PlaylistsSongsService {
   constructor() {
-    this._pool = pool;
+    this._pool = new Pool();
   }
 
   async addSongToPlaylist(playlistId, songId) {

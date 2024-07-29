@@ -1,7 +1,7 @@
 class PlaylistsSongsHandler {
-  constructor(playlistsService, playlistSongsService, validator) {
+  constructor(playlistsService, playlistsSongsService, validator) {
     this._playlistsService = playlistsService;
-    this._playlistSongsService = playlistSongsService;
+    this._playlistsSongsService = playlistsSongsService;
     this._validator = validator;
   }
 
@@ -14,7 +14,7 @@ class PlaylistsSongsHandler {
       playlistId,
       request.auth.credentials.id
     );
-    const playlistsongId = await this._playlistSongsService.addSongToPlaylist(
+    const playlistsongId = await this._playlistsSongsService.addSongToPlaylist(
       playlistId,
       songId
     );
@@ -36,7 +36,7 @@ class PlaylistsSongsHandler {
       playlistId,
       request.auth.credentials.id
     );
-    const songs = await this._playlistSongsService.getSongsFromPlaylist(
+    const songs = await this._playlistsSongsService.getSongsFromPlaylist(
       playlistId
     );
 
@@ -57,7 +57,10 @@ class PlaylistsSongsHandler {
       playlistId,
       request.auth.credentials.id
     );
-    await this._playlistSongsService.deleteSongFromPlaylist(playlistId, songId);
+    await this._playlistsSongsService.deleteSongFromPlaylist(
+      playlistId,
+      songId
+    );
 
     return {
       status: 'success',
@@ -65,3 +68,5 @@ class PlaylistsSongsHandler {
     };
   }
 }
+
+module.exports = PlaylistsSongsHandler;

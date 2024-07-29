@@ -25,7 +25,6 @@ class PlaylistsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      console.log("🚀 ~ file: handler.js:28 ~ PlaylistsHandler ~ postPlaylistHandler ~ error:", error)
       return error;
     }
   }

@@ -32,6 +32,7 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
+    
     return result.rows;
   }
 }

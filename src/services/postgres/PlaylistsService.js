@@ -32,8 +32,21 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
-    
+
     return result.rows;
+  }
+
+  async deletePlaylistById(id) {
+    const query = {
+      text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Playlist gagal dihapus. Id tidak ditemukan');
+    }
   }
 }
 

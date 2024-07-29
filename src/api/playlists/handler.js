@@ -23,3 +23,5 @@ class PlaylistsHandler {
     return response;
   }
 }
+
+module.exports = PlaylistsHandler;

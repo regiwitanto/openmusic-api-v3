@@ -13,7 +13,7 @@ class PlaylistsService {
     const updatedAt = createdAt;
 
     const query = {
-      text: 'INSERT INTO playlists VALUES($1, $2, $3, $4) RETURNING id',
+      text: 'INSERT INTO playlists VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, name, owner, createdAt, updatedAt],
     };
 
@@ -27,7 +27,7 @@ class PlaylistsService {
 
   async getPlaylists(owner) {
     const query = {
-      text: 'SELECT id, name FROM playlists WHERE owner = $1',
+      text: 'SELECT playlists.id, playlists.name, users.username FROM playlists LEFT JOIN users ON playlists.owner = users.id WHERE playlists.owner = $1',
       values: [owner],
     };
 

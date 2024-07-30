@@ -13,6 +13,15 @@ class PlaylistsSongsService {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
+    const songQuery = {
+      text: 'SELECT id FROM songs WHERE id = $1',
+      values: [songId],
+    };
+    const songResult = await this._pool.query(songQuery);
+    if (!songResult.rows.length) {
+      throw new NotFoundError('Lagu gagal ditambahkan ke playlist. Id lagu tidak ditemukan');
+    }
+
     const query = {
       text: 'INSERT INTO playlists_songs VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, playlistId, songId, createdAt, updatedAt],
@@ -28,15 +37,34 @@ class PlaylistsSongsService {
 
   async getSongsFromPlaylist(playlistId) {
     const query = {
-      text: `SELECT songs.id, songs.title, songs.performer FROM songs
-      LEFT JOIN playlists_songs ON songs.id = playlists_songs.song_id
-      WHERE playlists_songs.playlist_id = $1`,
+      text: `SELECT playlists.id AS playlist_id, playlists.name AS playlist_name, users.username, songs.id AS song_id, songs.title, songs.performer
+             FROM playlists
+             INNER JOIN users ON playlists.owner = users.id
+             LEFT JOIN playlists_songs ON playlists.id = playlists_songs.playlist_id
+             LEFT JOIN songs ON playlists_songs.song_id = songs.id
+             WHERE playlists.id = $1`,
       values: [playlistId],
     };
 
     const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist tidak ditemukan');
+    }
 
-    return result.rows;
+    const playlist = {
+      id: result.rows[0].playlist_id,
+      name: result.rows[0].playlist_name,
+      username: result.rows[0].username,
+      songs: result.rows
+        .filter((row) => row.song_id) // Filter out rows where song_id is null
+        .map((row) => ({
+          id: row.song_id,
+          title: row.title,
+          performer: row.performer,
+        })),
+    };
+
+    return playlist;
   }
 
   async deleteSongFromPlaylist(playlistId, songId) {

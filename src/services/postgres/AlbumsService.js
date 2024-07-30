@@ -47,15 +47,19 @@ class AlbumsService {
       songs: [],
     };
 
+    const songsMap = new Map();
+
     result.rows.forEach((row) => {
-      if (row.song_id) {
-        album.songs.push({
+      if (row.song_id && !songsMap.has(row.song_id)) {
+        songsMap.set(row.song_id, {
           id: row.song_id,
           title: row.title,
           performer: row.performer,
         });
       }
     });
+
+    album.songs = Array.from(songsMap.values());
 
     return album;
   }

@@ -7,7 +7,9 @@ class PlaylistsHandler {
   async postPlaylistHandler(request, h) {
     try {
       this._validator.validatePostPlaylistPayload(request.payload);
+
       const { name } = request.payload;
+
       const { id: credentialId } = request.auth.credentials;
 
       const playlistId = await this._playlistsService.addPlaylist({
@@ -17,47 +19,54 @@ class PlaylistsHandler {
 
       const response = h.response({
         status: 'success',
-        message: 'Playlist berhasil ditambahkan',
         data: {
           playlistId,
         },
       });
       response.code(201);
+
       return response;
     } catch (error) {
       return error;
     }
   }
 
-  async getPlaylistsHandler(request) {
+  async getPlaylistsHandler(request, h) {
     try {
       const { id: credentialId } = request.auth.credentials;
       const playlists = await this._playlistsService.getPlaylists(credentialId);
 
-      return {
+      const response = h.response({
         status: 'success',
         data: {
           playlists,
         },
-      };
+      });
+      response.code = 200;
+
+      return response;
     } catch (error) {
       return error;
     }
   }
 
-  async deletePlaylistByIdHandler(request) {
+  async deletePlaylistByIdHandler(request, h) {
     try {
-      const { playlistId } = request.params;
+      const { id } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyPlaylistOwner(playlistId, credentialId);
-      await this._service.deletePlaylistById(playlistId);
+      await this._playlistsService.verifyPlaylistOwner(id, credentialId);
+      await this._playlistsService.deletePlaylistById(id);
 
-      return {
+      const response = h.response({
         status: 'success',
         message: 'Playlist berhasil dihapus',
-      };
+      });
+      response.code = 200;
+
+      return response;
     } catch (error) {
+      console.log("🚀 ~ file: handler.js:69 ~ PlaylistsHandler ~ deletePlaylistByIdHandler ~ error:", error)
       return error;
     }
   }

@@ -16,42 +16,28 @@ exports.up = (pgm) => {
     },
     playlist_id: {
       type: 'VARCHAR(50)',
-      notNull: true,
+      references: '"playlists"',
+      onDelete: 'CASCADE',
     },
     song_id: {
       type: 'VARCHAR(50)',
+      references: '"songs"',
+      onDelete: 'CASCADE',
+    },
+    created_at: {
+      type: 'TEXT',
+      notNull: true,
+    },
+    updated_at: {
+      type: 'TEXT',
       notNull: true,
     },
   });
 
-  pgm.addConstraint('playlists_songs', 'unique_playlist_id_and_song_id', {
-    unique: ['playlist_id', 'song_id'],
-  });
-
   pgm.addConstraint(
     'playlists_songs',
-    'fk_playlists_songs.playlist_id_playlists.id_on_delete_cascade',
-    {
-      foreignKeys: {
-        columns: 'playlist_id',
-        references: 'playlists',
-        referencesConstraintName: 'fk_playlists_songs.playlist_id_playlists.id',
-        onDelete: 'CASCADE',
-      },
-    }
-  );
-
-  pgm.addConstraint(
-    'playlists_songs',
-    'fk_playlists_songs.song_id_songs.id_on_delete_cascade',
-    {
-      foreignKeys: {
-        columns: 'song_id',
-        references: 'songs',
-        referencesConstraintName: 'fk_playlists_songs.song_id_songs.id',
-        onDelete: 'CASCADE',
-      },
-    }
+    'unique_playlist_id_and_song_id',
+    'UNIQUE(playlist_id, song_id)'
   );
 };
 

@@ -16,13 +16,11 @@ exports.up = (pgm) => {
     },
     playlist_id: {
       type: 'VARCHAR(50)',
-      references: '"playlists"',
-      onDelete: 'CASCADE',
+      notNull: true,
     },
     song_id: {
       type: 'VARCHAR(50)',
-      references: '"songs"',
-      onDelete: 'CASCADE',
+      notNull: true,
     },
     created_at: {
       type: 'TEXT',
@@ -36,8 +34,13 @@ exports.up = (pgm) => {
 
   pgm.addConstraint(
     'playlists_songs',
-    'unique_playlist_id_and_song_id',
-    'UNIQUE(playlist_id, song_id)'
+    'fk_playlist.playlist_id_playlist.id',
+    'FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE'
+  );
+  pgm.addConstraint(
+    'playlists_songs',
+    'fk_playlist.song_id_songs.id',
+    'FOREIGN KEY(song_id) REFERENCES songs(id) ON DELETE CASCADE'
   );
 };
 

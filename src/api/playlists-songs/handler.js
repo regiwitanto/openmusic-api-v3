@@ -1,8 +1,14 @@
 class PlaylistsSongsHandler {
-  constructor(playlistsService, playlistsSongsService, validator) {
+  constructor(
+    playlistsService,
+    playlistsSongsService,
+    validator,
+    playlistsActivitiesService
+  ) {
     this._playlistsService = playlistsService;
     this._playlistsSongsService = playlistsSongsService;
     this._validator = validator;
+    this._playlistsActivitiesService = playlistsActivitiesService;
   }
 
   async postPlaylistsSongsHandler(request, h) {
@@ -18,6 +24,12 @@ class PlaylistsSongsHandler {
         credentialId
       );
       await this._playlistsSongsService.addSongToPlaylist(playlistId, songId);
+      await this._playlistsActivitiesService.addActivity({
+        playlistId,
+        songId,
+        userId: credentialId,
+        action: 'add',
+      });
 
       const response = h.response({
         status: 'success',

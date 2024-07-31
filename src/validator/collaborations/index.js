@@ -8,6 +8,12 @@ const CollaborationsValidator = {
       throw new InvariantError(validationResult.error.message);
     }
   },
+  validateDeleteCollaborationsPayload: (payload) => {
+    const validationResult = PostCOllaborationsPayloadSchema.validate(payload);
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
 };
 
 module.exports = CollaborationsValidator;

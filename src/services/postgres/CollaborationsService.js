@@ -10,7 +10,7 @@ class CollaborationsService {
 
   async addCollaboration(playlistId, userId) {
     const userQuery = {
-      text: 'SELECT id FROM users WHERE id = $1',
+      text: 'SELECT * FROM users WHERE id = $1',
       values: [userId],
     };
 
@@ -29,7 +29,7 @@ class CollaborationsService {
     };
 
     const result = await this._pool.query(query);
-    if (!result.rows[0].id) {
+    if (!result.rows.length) {
       throw new InvariantError('Kolaborasi gagal ditambahkan');
     }
 
@@ -45,6 +45,18 @@ class CollaborationsService {
     const result = await this._pool.query(query);
     if (!result.rows.length) {
       throw new InvariantError('Kolaborasi gagal dihapus. Id tidak ditemukan');
+    }
+  }
+
+  async verifyCollaborator(playlistId, userId) {
+    const query = {
+      text: 'SELECT * FROM collaborations WHERE playlist_id = $1 AND user_id = $2',
+      values: [playlistId, userId],
+    };
+
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new InvariantError('Kolaborasi gagal diverifikasi');
     }
   }
 }

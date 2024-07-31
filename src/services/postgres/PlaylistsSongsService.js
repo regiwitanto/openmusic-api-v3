@@ -9,18 +9,21 @@ class PlaylistsSongsService {
   }
 
   async addSongToPlaylist(playlistId, songId) {
-    const id = `playlist-songs-${nanoid(16)}`;
-    const createdAt = new Date().toISOString();
-    const updatedAt = createdAt;
-
     const songQuery = {
       text: 'SELECT id FROM songs WHERE id = $1',
       values: [songId],
     };
+
     const songResult = await this._pool.query(songQuery);
     if (!songResult.rows.length) {
-      throw new NotFoundError('Lagu gagal ditambahkan ke playlist. Id lagu tidak ditemukan');
+      throw new NotFoundError(
+        'Lagu gagal ditambahkan ke playlist. Id lagu tidak ditemukan'
+      );
     }
+
+    const id = `playlist-songs-${nanoid(16)}`;
+    const createdAt = new Date().toISOString();
+    const updatedAt = createdAt;
 
     const query = {
       text: 'INSERT INTO playlists_songs VALUES($1, $2, $3, $4, $5) RETURNING id',

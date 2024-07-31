@@ -66,7 +66,6 @@ class PlaylistsHandler {
 
       return response;
     } catch (error) {
-      console.log("🚀 ~ file: handler.js:69 ~ PlaylistsHandler ~ deletePlaylistByIdHandler ~ error:", error)
       return error;
     }
   }

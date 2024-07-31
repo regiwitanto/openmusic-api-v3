@@ -1,0 +1,12 @@
+const routes = (handler) => [
+  {
+    method: 'POST',
+    path: '/collaborations',
+    handler: (request, h) => handler.postCollaborationHandler(request, h),
+    options: {
+      auth: 'openmusic_jwt',
+    },
+  },
+];
+
+module.exports = routes;

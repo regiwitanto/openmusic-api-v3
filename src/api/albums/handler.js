@@ -45,7 +45,6 @@ class AlbumsHandler {
 
       return response;
     } catch (error) {
-      console.log("🚀 ~ file: handler.js:48 ~ AlbumsHandler ~ getAlbumByIdHandler ~ error:", error)
       return error;
     }
   }

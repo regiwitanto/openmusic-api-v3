@@ -7,7 +7,7 @@ class CollaborationsHandler {
 
   async postCollaborationHandler(request, h) {
     try {
-      this._validator.validateCollaborationPayload(request.payload);
+      this._validator.validatePostCollaborationsPayload(request.payload);
       const { playlistId, userId } = request.payload;
       const { id: credentialId } = request.auth.credentials;
 

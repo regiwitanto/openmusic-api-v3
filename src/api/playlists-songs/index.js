@@ -11,13 +11,13 @@ module.exports = {
       playlistsSongsService,
       validator,
       playlistsActivitiesService,
-    }
+    },
   ) => {
     const playlistsSongsHandler = new PlaylistsSongsHandler(
       playlistsService,
       playlistsSongsService,
       validator,
-      playlistsActivitiesService
+      playlistsActivitiesService,
     );
     server.route(routes(playlistsSongsHandler));
   },

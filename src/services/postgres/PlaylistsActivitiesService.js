@@ -8,7 +8,9 @@ class PlaylistsActivitiesService {
     this._pool = new Pool();
   }
 
-  async addActivity({ playlistId, songId, userId, action }) {
+  async addActivity({
+    playlistId, songId, userId, action,
+  }) {
     const id = `activity-${nanoid(16)}`;
     const time = new Date().toISOString();
     const createdAt = new Date().toISOString();
@@ -47,6 +49,9 @@ class PlaylistsActivitiesService {
     };
 
     const result = await this._pool.query(query);
+    if (!result.rows) {
+      throw new NotFoundError('Activity tidak ditemukan');
+    }
 
     return result.rows.map((row) => ({
       id: row.id,

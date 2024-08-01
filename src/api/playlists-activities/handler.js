@@ -12,11 +12,11 @@ class PlaylistsActivitiesHandler {
 
       await this._playlistsService.verifyPlaylistAccess(
         playlistId,
-        credentialId
+        credentialId,
       );
 
       const activities = await this._playlistsActivitiesService.getActivities(
-        playlistId
+        playlistId,
       );
 
       const response = h.response({

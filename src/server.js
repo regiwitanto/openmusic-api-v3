@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
-const ClientError = require('./exceptions/ClientError');
 const Jwt = require('@hapi/jwt');
+const ClientError = require('./exceptions/ClientError');
 
 // albums
 const albums = require('./api/albums');
@@ -129,7 +129,7 @@ const init = async () => {
       plugin: playlistsSongs,
       options: {
         playlistsService,
-        playlistsSongsService: playlistsSongsService,
+        playlistsSongsService,
         validator: PlaylistsSongsValidator,
         playlistsActivitiesService,
       },

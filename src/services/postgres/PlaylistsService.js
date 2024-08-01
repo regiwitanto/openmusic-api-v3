@@ -84,7 +84,7 @@ class PlaylistsService {
       try {
         await this._collaborationsService.verifyCollaborator(
           playlistId,
-          userId
+          userId,
         );
       } catch {
         throw error;

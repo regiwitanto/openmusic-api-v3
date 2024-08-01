@@ -17,7 +17,7 @@ class PlaylistsSongsService {
     const songResult = await this._pool.query(songQuery);
     if (!songResult.rows.length) {
       throw new NotFoundError(
-        'Lagu gagal ditambahkan ke playlist. Id lagu tidak ditemukan'
+        'Lagu gagal ditambahkan ke playlist. Id lagu tidak ditemukan',
       );
     }
 
@@ -40,7 +40,8 @@ class PlaylistsSongsService {
 
   async getSongsFromPlaylist(playlistId) {
     const query = {
-      text: `SELECT playlists.id AS playlist_id, playlists.name AS playlist_name, users.username, songs.id AS song_id, songs.title, songs.performer
+      text: `SELECT playlists.id AS playlist_id, playlists.name AS playlist_name,
+            users.username, songs.id AS song_id, songs.title, songs.performer
             FROM playlists
             INNER JOIN users ON playlists.owner = users.id
             LEFT JOIN playlists_songs ON playlists.id = playlists_songs.playlist_id
@@ -79,7 +80,7 @@ class PlaylistsSongsService {
     const result = await this._pool.query(query);
     if (!result.rows.length) {
       throw new NotFoundError(
-        'Lagu gagal dihapus dari playlist. Id tidak ditemukan'
+        'Lagu gagal dihapus dari playlist. Id tidak ditemukan',
       );
     }
   }

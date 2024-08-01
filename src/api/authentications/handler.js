@@ -14,7 +14,7 @@ class AuthenticationsHandler {
 
       const id = await this._usersService.verifyUserCredential(
         username,
-        password
+        password,
       );
 
       const accessToken = this._tokenManager.generateAccessToken({ id });
@@ -68,7 +68,7 @@ class AuthenticationsHandler {
       this._validator.validateDeleteAuthenticationPayload(request.payload);
 
       const { refreshToken } = request.payload;
-      
+
       await this._authenticationsService.verifyRefreshToken(refreshToken);
       await this._authenticationsService.deleteRefreshToken(refreshToken);
 

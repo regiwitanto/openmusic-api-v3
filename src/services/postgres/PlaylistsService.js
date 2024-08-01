@@ -58,7 +58,7 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(id, owner) {
     const query = {
-      text: 'SELECT owner FROM playlists WHERE id = $1',
+      text: 'SELECT * FROM playlists WHERE id = $1',
       values: [id],
     };
 
@@ -81,7 +81,10 @@ class PlaylistsService {
         throw error;
       }
       try {
-        await this._collaborationsService.verifyCollaborator(playlistId, userId);
+        await this._collaborationsService.verifyCollaborator(
+          playlistId,
+          userId
+        );
       } catch (error) {
         throw error;
       }

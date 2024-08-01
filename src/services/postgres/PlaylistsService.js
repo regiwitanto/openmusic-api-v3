@@ -77,7 +77,10 @@ class PlaylistsService {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
-      if (error instanceof NotFoundError) {
+      if (
+        error instanceof NotFoundError ||
+        error instanceof AuthorizationError
+      ) {
         throw error;
       }
       try {

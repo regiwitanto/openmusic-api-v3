@@ -35,6 +35,28 @@ class PlaylistsActivitiesService {
 
     return result.rows[0].id;
   }
+
+  async getActivities(playlistId) {
+    const query = {
+      text: `SELECT pa.id, u.username, s.title, pa.action, pa.time
+             FROM playlists_activities pa
+             LEFT JOIN users u ON u.id = pa.user_id
+             LEFT JOIN songs s ON s.id = pa.song_id
+             WHERE pa.playlist_id = $1
+             ORDER BY pa.time DESC`,
+      values: [playlistId],
+    };
+
+    const result = await this._pool.query(query);
+    
+    return result.rows.map((row) => ({
+      id: row.id,
+      username: row.username,
+      title: row.title,
+      action: row.action,
+      time: row.time,
+    }));
+  }
 }
 
 module.exports = PlaylistsActivitiesService;

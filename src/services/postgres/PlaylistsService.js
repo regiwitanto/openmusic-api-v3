@@ -77,18 +77,16 @@ class PlaylistsService {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
-      if (
-        error instanceof NotFoundError ||
-        error instanceof AuthorizationError
-      ) {
+      if (error instanceof NotFoundError) {
         throw error;
       }
+
       try {
         await this._collaborationsService.verifyCollaborator(
           playlistId,
           userId
         );
-      } catch (error) {
+      } catch {
         throw error;
       }
     }

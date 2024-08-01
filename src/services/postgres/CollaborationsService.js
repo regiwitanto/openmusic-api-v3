@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { nanoId } = require('nanoid');
+const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
@@ -19,7 +19,7 @@ class CollaborationsService {
       throw new NotFoundError('User tidak ditemukan');
     }
 
-    const id = `collaboration-${nanoId(16)}`;
+    const id = `collaboration-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 

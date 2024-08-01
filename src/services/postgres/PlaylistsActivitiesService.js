@@ -48,7 +48,7 @@ class PlaylistsActivitiesService {
     };
 
     const result = await this._pool.query(query);
-    
+
     return result.rows.map((row) => ({
       id: row.id,
       username: row.username,

@@ -1,6 +1,7 @@
 class PlaylistsActivitiesHandler {
-  constructor(service, validator) {
-    this._service = service;
+  constructor(playlistsService, playlistsActivitiesService, validator) {
+    this._playlistsService = playlistsService;
+    this._playlistsActivitiesService = playlistsActivitiesService;
     this._validator = validator;
   }
 

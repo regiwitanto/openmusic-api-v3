@@ -86,6 +86,12 @@ class PlaylistsSongsHandler {
         playlistId,
         songId
       );
+      await this._playlistsActivitiesService.addActivity({
+        playlistId,
+        songId,
+        userId: credentialId,
+        action: 'delete',
+      });
 
       const response = h.response({
         status: 'success',

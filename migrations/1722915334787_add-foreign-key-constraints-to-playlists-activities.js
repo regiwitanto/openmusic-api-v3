@@ -34,7 +34,16 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-  pgm.dropConstraint('playlists_activities', 'fk_playlists_activities.playlist_id_playlists.id');
-  pgm.dropConstraint('playlists_activities', 'fk_playlists_activities.user_id_users.id');
-  pgm.dropConstraint('playlists_activities', 'fk_playlists_activities.song_id_songs.id');
+  pgm.dropConstraint(
+    'playlists_activities',
+    'fk_playlists_activities.playlist_id_playlists.id'
+  );
+  pgm.dropConstraint(
+    'playlists_activities',
+    'fk_playlists_activities.user_id_users.id'
+  );
+  pgm.dropConstraint(
+    'playlists_activities',
+    'fk_playlists_activities.song_id_songs.id'
+  );
 };

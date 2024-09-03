@@ -14,7 +14,7 @@ class ExportsHandler {
 
       await this._playlistsService.verifyPlaylistAccess(
         playlistId,
-        credentialId
+        credentialId,
       );
 
       const message = {
@@ -24,7 +24,7 @@ class ExportsHandler {
 
       await this._producerService.sendMessage(
         'export:playlists',
-        JSON.stringify(message)
+        JSON.stringify(message),
       );
 
       const response = h.response({

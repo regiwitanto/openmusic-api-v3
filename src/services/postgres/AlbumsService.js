@@ -2,6 +2,7 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
+const { mapAlbumDBToModel } = require('../../utils');
 
 class AlbumsService {
   constructor() {
@@ -27,41 +28,24 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const query = {
-      text: `SELECT albums.id AS album_id, albums.name, albums.year, songs.id AS song_id, songs.title, songs.performer
-            FROM albums
-            LEFT JOIN songs ON albums.id = songs.album_id
-            WHERE albums.id = $1`,
+    const result = await this._pool.query({
+      text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
-    };
+    });
 
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
-    const album = {
-      id: result.rows[0].album_id,
-      name: result.rows[0].name,
-      year: result.rows[0].year,
-      songs: [],
-    };
-
-    const songsMap = new Map();
-
-    result.rows.forEach((row) => {
-      if (row.song_id && !songsMap.has(row.song_id)) {
-        songsMap.set(row.song_id, {
-          id: row.song_id,
-          title: row.title,
-          performer: row.performer,
-        });
-      }
+    const resultSongs = await this._pool.query({
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+      values: [id],
     });
 
-    album.songs = Array.from(songsMap.values());
-
-    return album;
+    return {
+      ...result.rows.map(mapAlbumDBToModel)[0],
+      songs: resultSongs.rows,
+    };
   }
 
   async editAlbumById(id, { name, year }) {
@@ -88,6 +72,13 @@ class AlbumsService {
     if (!result.rows.length) {
       throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
     }
+  }
+
+  async editAlbumCoverById(id, fileLocation) {
+    await this._pool.query({
+      text: 'UPDATE albums SET cover_url = $1 WHERE id = $2 RETURNING id',
+      values: [fileLocation, id],
+    });
   }
 }
 

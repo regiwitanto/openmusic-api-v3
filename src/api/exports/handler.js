@@ -1,14 +1,15 @@
 class ExportsHandler {
-  constructor(service, validator) {
-    this._validator = validator;
+  constructor(producerService, playlistsService, validator) {
+    this._producerService = producerService;
     this._playlistsService = playlistsService;
+    this._validator = validator;
   }
 
   async postExportPlaylistHandler(request, h) {
     try {
       this._validator.validateExportPlaylistPayload(request.payload);
 
-      const { playlistId } = request.payload;
+      const { playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
       await this._playlistsService.verifyPlaylistAccess(

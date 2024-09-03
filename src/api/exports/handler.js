@@ -22,7 +22,7 @@ class ExportsHandler {
         targetEmail: request.payload.targetEmail,
       };
 
-      await this._service.sendMessage(
+      await this._producerService.sendMessage(
         'export:playlists',
         JSON.stringify(message)
       );

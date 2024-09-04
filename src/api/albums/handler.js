@@ -94,17 +94,15 @@ class AlbumsHandler {
     }
   }
 
-  async postUploadImageHandler(req, h) {
+  async postAlbumCoverHandler(req, h) {
     try {
       const { id } = req.params;
       const { cover } = req.payload;
-
-      await this._albumsService.isAlbumExist(id);
       this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
 
       const filename = await this._storageService.writeFile(cover, cover.hapi);
-      const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/uploads/file/images/${filename}`;
-      await this._albumsService.editAlbumCoverById(id, fileLocation);
+      const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/api/albums/file/images/${filename}`;
+      await this._albumsService.editAlbumCoverById(fileLocation, id);
 
       const response = h.response({
         status: 'success',

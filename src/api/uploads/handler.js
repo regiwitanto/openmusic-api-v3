@@ -14,7 +14,7 @@ class UploadsHandler {
       const response = h.response({
         status: 'success',
         data: {
-          fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/images/${fileName}`,
+          fileLocation: `http://${process.env.HOST}:${process.env.PORT}/uploads/file/images/${fileName}`,
         },
       });
       response.code(201);

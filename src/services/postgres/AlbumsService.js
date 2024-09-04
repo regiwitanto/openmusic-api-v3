@@ -80,6 +80,17 @@ class AlbumsService {
       values: [fileLocation, id],
     });
   }
+
+  async isAlbumExist(id) {
+    const result = await this._pool.query({
+      text: 'SELECT * FROM albums WHERE id = $1',
+      values: [id],
+    });
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Album tidak ditemukan');
+    }
+  }
 }
 
 module.exports = AlbumsService;

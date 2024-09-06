@@ -94,10 +94,10 @@ class AlbumsHandler {
     }
   }
 
-  async postAlbumCoverHandler(req, h) {
+  async postAlbumCoverHandler(request, h) {
     try {
-      const { id } = req.params;
-      const { cover } = req.payload;
+      const { id } = request.params;
+      const { cover } = request.payload;
       this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
 
       const filename = await this._storageService.writeFile(cover, cover.hapi);
@@ -109,6 +109,25 @@ class AlbumsHandler {
         message: 'Sampul berhasil diunggah',
       });
       response.code(201);
+      return response;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async postAlbumLikeByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+      const { id: credentialId } = request.auth.credentials;
+
+      await this._albumsService.addLikeByAlbumId(id, credentialId);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Like berhasil ditambahkan',
+      });
+      response.code(200);
+
       return response;
     } catch (error) {
       return error;

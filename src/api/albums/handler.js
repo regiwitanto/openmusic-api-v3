@@ -3,7 +3,7 @@ class AlbumsHandler {
     albumsService,
     albumsValidator,
     storageService,
-    uploadsValidator
+    uploadsValidator,
   ) {
     this._albumsService = albumsService;
     this._albumsValidator = albumsValidator;

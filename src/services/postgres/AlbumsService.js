@@ -100,7 +100,7 @@ class AlbumsService {
     const albumLike = await this.checkAlbumLikeById(albumId, userId);
     if (albumLike) {
       throw new InvariantError(
-        'Gagal menambahkan like. User sudah memberikan like'
+        'Gagal menambahkan like. User sudah memberikan like',
       );
     }
 

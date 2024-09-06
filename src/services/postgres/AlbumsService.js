@@ -114,6 +114,18 @@ class AlbumsService {
       throw new InvariantError('Like gagal ditambahkan');
     }
   }
+
+  async deleteAlbumLikeById(albumId, userId) {
+    const query = {
+      text: 'DELETE FROM user_album_likes WHERE album_id = $1 AND user_id = $2 RETURNING id',
+      values: [albumId, userId],
+    };
+
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new InvariantError('Like gagal dihapus');
+    }
+  }
 }
 
 module.exports = AlbumsService;

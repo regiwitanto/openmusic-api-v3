@@ -3,7 +3,7 @@ class AlbumsHandler {
     albumsService,
     albumsValidator,
     storageService,
-    uploadsValidator,
+    uploadsValidator
   ) {
     this._albumsService = albumsService;
     this._albumsValidator = albumsValidator;
@@ -127,6 +127,26 @@ class AlbumsHandler {
         message: 'Like berhasil ditambahkan',
       });
       response.code(201);
+
+      return response;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getAlbumLikesByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+
+      const likes = await this._albumsService.getAlbumLikesById(id);
+
+      const response = h.response({
+        status: 'success',
+        data: {
+          likes,
+        },
+      });
+      response.code(200);
 
       return response;
     } catch (error) {

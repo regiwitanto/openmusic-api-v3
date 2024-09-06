@@ -28,17 +28,24 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const query = {
+    const result = await this._pool.query({
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
-    };
+    });
 
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
-    return result.rows.map(mapAlbumDBToModel)[0];
+    const resultSongs = await this._pool.query({
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+      values: [id],
+    });
+
+    return {
+      ...result.rows.map(mapAlbumDBToModel)[0],
+      songs: resultSongs.rows,
+    };
   }
 
   async editAlbumById(id, { name, year }) {
@@ -93,7 +100,7 @@ class AlbumsService {
     const albumLike = await this.checkAlbumLikeById(albumId, userId);
     if (albumLike) {
       throw new InvariantError(
-        'Gagal menambahkan like. User sudah memberikan like',
+        'Gagal menambahkan like. User sudah memberikan like'
       );
     }
 

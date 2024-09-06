@@ -126,6 +126,18 @@ class AlbumsService {
       throw new InvariantError('Like gagal dihapus');
     }
   }
+
+  async getAlbumLikesById(albumId) {
+    const query = {
+      text: 'SELECT * FROM user_album_likes WHERE album_id = $1',
+      values: [albumId],
+    };
+
+    const result = await this._pool.query(query);
+    const likes = result.rows.length;
+
+    return likes;
+  }
 }
 
 module.exports = AlbumsService;

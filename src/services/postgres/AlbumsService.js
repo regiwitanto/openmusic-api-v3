@@ -73,6 +73,51 @@ class AlbumsService {
       values: [fileLocation, id],
     });
   }
+
+  async isAlbumExist(id) {
+    const result = await this._pool.query({
+      text: 'SELECT * FROM albums WHERE id = $1',
+      values: [id],
+    });
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Album tidak ditemukan');
+    }
+  }
+
+  async addAlbumLikeByAlbumId(albumId, userId) {
+    await this.isAlbumExist(albumId);
+
+    const result = await this._pool.query({
+      text: 'SELECT * FROM user_album_likes WHERE album_id = $1 AND user_id = $2',
+      values: [albumId, userId],
+    });
+
+    let message = '';
+    if (!result.rowCount) {
+      const resultInsert = await this._pool.query({
+        text: 'INSERT INTO user_album_likes (album_id, user_id) VALUES($1, $2) RETURNING id',
+        values: [albumId, userId],
+      });
+
+      if (!resultInsert.rowCount) {
+        throw new InvariantError('Gagal menyukai album');
+      }
+      message = 'Berhasil menyukai album';
+    } else {
+      const resultDelete = await this._pool.query({
+        text: 'DELETE FROM user_album_likes WHERE album_id = $1 AND user_id = $2 RETURNING id',
+        values: [albumId, userId],
+      });
+
+      if (!resultDelete.rowCount) {
+        throw new InvariantError('Gagal membatalkan menyukai album');
+      }
+      message = 'Batal menyukai album';
+    }
+    // await this._cacheService.delete(`user_album_likes:${albumId}`);
+    return message;
+  }
 }
 
 module.exports = AlbumsService;

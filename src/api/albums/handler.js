@@ -120,13 +120,13 @@ class AlbumsHandler {
       const { id } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._albumsService.addAlbumLikeByAlbumId(id, credentialId);
+      await this._albumsService.addAlbumLikeById(id, credentialId);
 
       const response = h.response({
         status: 'success',
         message: 'Like berhasil ditambahkan',
       });
-      response.code(200);
+      response.code(201);
 
       return response;
     } catch (error) {

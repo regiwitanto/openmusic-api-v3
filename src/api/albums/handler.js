@@ -3,7 +3,7 @@ class AlbumsHandler {
     albumsService,
     albumsValidator,
     storageService,
-    uploadsValidator,
+    uploadsValidator
   ) {
     this._albumsService = albumsService;
     this._albumsValidator = albumsValidator;
@@ -157,7 +157,8 @@ class AlbumsHandler {
     try {
       const { id } = request.params;
 
-      const likes = await this._albumsService.getAlbumLikesById(id);
+      const likeData = await this._albumsService.getAlbumLikesById(id);
+      const { likes, source } = likeData;
 
       const response = h.response({
         status: 'success',
@@ -166,6 +167,7 @@ class AlbumsHandler {
         },
       });
       response.code(200);
+      response.header('X-Data-Source', source);
 
       return response;
     } catch (error) {

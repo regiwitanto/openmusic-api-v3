@@ -40,7 +40,6 @@ class SongsServices {
   }
 
   async getSongs({ title, performer }) {
-    let query = 'SELECT id, title, performer FROM songs';
     const conditions = [];
     const values = [];
 
@@ -54,6 +53,7 @@ class SongsServices {
       values.push(`%${performer}%`);
     }
 
+    let query = 'SELECT id, title, performer FROM songs';
     if (conditions.length > 0) {
       query += ` WHERE ${conditions.join(' AND ')}`;
     }
@@ -65,11 +65,12 @@ class SongsServices {
   }
 
   async getSongById(id) {
-    const result = await this._pool.query({
+    const query = {
       text: 'SELECT * FROM songs WHERE id = $1',
       values: [id],
-    });
+    };
 
+    const result = await this._pool.query(query);
     if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }

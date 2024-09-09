@@ -29,23 +29,32 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    const result = await this._pool.query({
+    const albumQuery = {
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
-    });
+    };
 
-    if (!result.rowCount) {
+    const albumResult = await this._pool.query(albumQuery);
+    if (!albumResult.rowCount) {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
-    const resultSongs = await this._pool.query({
+    const songsQuery = {
       text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
       values: [id],
-    });
+    };
+
+    const songsResult = await this._pool.query(songsQuery);
+    if (!songsResult.rowCount) {
+      return {
+        ...albumResult.rows.map(mapAlbumDBToModel)[0],
+        songs: [],
+      };
+    }
 
     return {
-      ...result.rows.map(mapAlbumDBToModel)[0],
-      songs: resultSongs.rows,
+      ...albumResult.rows.map(mapAlbumDBToModel)[0],
+      songs: songsResult.rows,
     };
   }
 
@@ -76,10 +85,17 @@ class AlbumsService {
   }
 
   async editAlbumCoverById(fileLocation, id) {
-    await this._pool.query({
+    const query = {
       text: 'UPDATE albums SET cover_url = $1 WHERE id = $2 RETURNING id',
       values: [fileLocation, id],
-    });
+    };
+
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError(
+        'Gagal memperbarui cover album. Id tidak ditemukan',
+      );
+    }
   }
 
   async checkAlbumLikeById(albumId, userId) {
@@ -89,6 +105,7 @@ class AlbumsService {
     };
 
     const result = await this._pool.query(query);
+
     return result.rows.length;
   }
 
@@ -147,6 +164,7 @@ class AlbumsService {
       };
 
       const result = await this._pool.query(query);
+
       const likes = result.rows.length;
 
       await this._cacheService.set(

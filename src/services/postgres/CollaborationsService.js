@@ -23,17 +23,17 @@ class CollaborationsService {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const query = {
+    const insertQuery = {
       text: 'INSERT INTO collaborations VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, playlistId, userId, createdAt, updatedAt],
     };
 
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    const insertResult = await this._pool.query(insertQuery);
+    if (!insertResult.rows.length) {
       throw new InvariantError('Kolaborasi gagal ditambahkan');
     }
 
-    return result.rows[0].id;
+    return insertResult.rows[0].id;
   }
 
   async deleteCollaboration(playlistId, userId) {

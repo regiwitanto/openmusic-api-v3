@@ -23,7 +23,9 @@ class PlaylistsSongsHandler {
         playlistId,
         credentialId,
       );
+
       await this._playlistsSongsService.addSongToPlaylist(playlistId, songId);
+
       await this._playlistsActivitiesService.addActivity({
         playlistId,
         songId,
@@ -52,6 +54,7 @@ class PlaylistsSongsHandler {
         playlistId,
         credentialId,
       );
+
       const playlist = await this._playlistsSongsService.getSongsFromPlaylist(
         playlistId,
       );
@@ -82,10 +85,12 @@ class PlaylistsSongsHandler {
         playlistId,
         credentialId,
       );
+
       await this._playlistsSongsService.deleteSongFromPlaylist(
         playlistId,
         songId,
       );
+
       await this._playlistsActivitiesService.addActivity({
         playlistId,
         songId,

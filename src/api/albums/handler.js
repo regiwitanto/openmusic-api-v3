@@ -1,3 +1,5 @@
+const config = require('../../utils/config');
+
 class AlbumsHandler {
   constructor(
     albumsService,
@@ -98,10 +100,13 @@ class AlbumsHandler {
     try {
       const { id } = request.params;
       const { cover } = request.payload;
+
       this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
 
       const filename = await this._storageService.writeFile(cover, cover.hapi);
-      const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/albums/images/${filename}`;
+
+      const fileLocation = `http://${config.app.host}:${config.app.port}/albums/images/${filename}`;
+
       await this._albumsService.editAlbumCoverById(fileLocation, id);
 
       const response = h.response({
@@ -109,6 +114,7 @@ class AlbumsHandler {
         message: 'Sampul berhasil diunggah',
       });
       response.code(201);
+
       return response;
     } catch (error) {
       return error;
@@ -158,6 +164,7 @@ class AlbumsHandler {
       const { id } = request.params;
 
       const likeData = await this._albumsService.getAlbumLikesById(id);
+
       const { likes, source } = likeData;
 
       const response = h.response({

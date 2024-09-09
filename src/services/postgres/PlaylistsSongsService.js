@@ -25,17 +25,17 @@ class PlaylistsSongsService {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const query = {
+    const insertQuery = {
       text: 'INSERT INTO playlists_songs VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, playlistId, songId, createdAt, updatedAt],
     };
 
-    const result = await this._pool.query(query);
-    if (!result.rows[0].id) {
+    const insertResult = await this._pool.query(insertQuery);
+    if (!insertResult.rows[0].id) {
       throw new InvariantError('Lagu gagal ditambahkan ke playlist');
     }
 
-    return result.rows[0].id;
+    return insertResult.rows[0].id;
   }
 
   async getSongsFromPlaylist(playlistId) {
@@ -60,7 +60,7 @@ class PlaylistsSongsService {
       name: result.rows[0].playlist_name,
       username: result.rows[0].username,
       songs: result.rows
-        .filter((row) => row.song_id) // Filter out rows where song_id is null
+        .filter((row) => row.song_id)
         .map((row) => ({
           id: row.song_id,
           title: row.title,
